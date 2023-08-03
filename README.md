@@ -1,10 +1,11 @@
-# มาลองเล่น kong api gateway กันซ๊ะหน่อย ใช้เป็น Version : Kong Open–Source (Community) #
+# มาลองเล่น kong api gateway กันซ๊ะหน่อย ใช้เป็น Version : Kong Open–Source (Community) 
 
 เริ่มจากอันดับแรกเลย มารู้จักก่อนว่า API คืออะไร API ย่อมาจาก “Application Program Interface” ลองดูรูปนี้ก่อน
 
 ![image](https://github.com/Arctica-th/kong/assets/105619969/08b2f82f-c318-44f7-a55d-3abf01b61afa)
 
 การทำงานคือ API ทำหน้าที่เป็นส่วนที่ทำงานประมวลผลตามที่ถูกออกแบบมา ก็ลอง จำลอง ภาพด้านบนนี้ว่าคือการที่ Client ส่ง request มาที่ API ==> API ก็จะไปหยิบข้อมูลจาก Database เพื่อมาตอบให้กับ Client ตาม request ที่ได้รับมาและเป็นไปตามการทำงานของ API เอ๊ะ!!! เป็นไปตามการทำงานของ API ทำไมหน่ะเหรอ ก็เพราะว่า API ถูกสร้างมาเพื่อทำงานตามที่โปรแกรมไว้ และมีเงื่อนไขการรับข้อมูล ว่าต้องการอะไรบ้างแล้วถึงจะ reponse ผลลัพธ์กลับไปให้คนที่ request เข้ามา โดยปกติ ก็จะต้องระบุว่าเป็น method อะไร, parameter ต้องส่งอะไรมาบ้าง, format แบบไหน เป็นต้น
+
 ---
 
 ### KONG Gateway ###
@@ -93,7 +94,42 @@ docker ps -a
 ```
 http://localhost:1337
 ```
+
+![image](https://github.com/Arctica-th/kong/assets/105619969/81d82ac4-f8c2-41aa-9a45-d32e0e63dbe1)
+
+
 8. login ลอกมาจากไฟล์ kus.js ได้เลย
+
+![image](https://github.com/Arctica-th/kong/assets/105619969/94b7eadc-e529-4385-84b5-0296778ab881)
+
 9. ในหน้านี้ให้เราใส่รายละเอียดของ kong gateway ก่อนถึงจะเข้าสู่หน้าหลักได้
 
+![image](https://github.com/Arctica-th/kong/assets/105619969/73fb7f8d-c80a-4393-b25a-c4a260e01c65)
+
 ที่นี่เราจะมาลอง configure Kong กันหน่อยเพื่อทดสอบการใช้งาน kong เบื้องค้น
+
+### ทดสอบการทำ api gateway ###
+1. Run nginx ที่เป็น docker container ไว้สำหรับทดสอบ
+2. ทดสอบเปิด web browser ของ nginx ก่อน
+3. สร้าง service
+4. สร้าง route
+5. สร้าง consumer
+6. เพิ่ม plugin Basic ใน consumer เพื่อเพิ่มเรื่อง security ไม่ใช่ว่าใครจะมาเรียกก็ได้ ต้องกรอก username/password ให้ถูกก่อน!!!
+7. ของครบแล้วล่ะ มาลองเปิดหน้า nginx กันอีกครั้ง
+
+หึหึ เป็นไงละ ติด username/password ใช่ไหมละ ลองกรอกดู
+
+---
+
+### ALC Plugin ###
+
+ที่นี่มาลองใช้งาน Plugin อีกตัวที่เข้ามาควรจัดการ การเข้าถึงของ consumer อีกที นั่นก็คือ ACL Plugin
+
+1. สร้าง consumer มาเพิ่มก่อนเพื่อให้เป็นคนที่ถูกเลือกให้ผิดหวัง
+2. กำหนด group ให้ต่างกันกับ consumer ก่อนหน้านี้ แล้วกด submit
+3. Configure service เพิ่มโดยการ Add Plugin ACL เข้าไป และใส่ group ของ consumer แรก
+4. เคลียร์ web browser แปป เสร็จแล้วลองเปิดขึ้นมาใหม่ แต่เดี๋ยวก่อน นี่แหละ มาลองทีละอัน อันแรกลอง username/password ของ consumer-1 ก่อน
+
+เห็นไหม เข้าได้ใช่ไหม งั้นเราไปดูคนที่ถูกเลือกให้ผิดหวังกัน เปิด tab ใหม่ขึ้นมาแล้วกรอก link เดิมเลย ที่นี่ลองใส่ username/password ของ consumer-2 ดู
+
+เรียบร้อย เข้าไม่ได้ใช่ไหมละ ก็เพราะเป็นคน... ไม่มีสิทธิ์... จะคิดดดดดดดดด เข้ามาก็ Deny ซิคร้าบบบ
