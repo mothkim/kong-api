@@ -1,2 +1,0 @@
-# kong
-Kong API Gateway
