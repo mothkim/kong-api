@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   kong-database:
-    image: postgres:9.6
+    image: postgres:13
     container_name: kong-database
     environment:
       - POSTGRES_USER=kong
@@ -21,7 +21,7 @@ services:
   migrations:
     depends_on:
       - kong-database
-    image: kong:2.8.3-alpine
+    image: kong:3.3.0
     container_name: kong-migrations
     environment:
       - KONG_DATABASE=postgres
@@ -33,7 +33,7 @@ services:
   kong:
     depends_on:
       - kong-database
-    image: kong:2.8.3-alpine
+    image: kong:3.3.0
     ports:
       - 80:8000
       - 443:8443
@@ -72,7 +72,7 @@ services:
     volumes:
       - konga_data:/data/db
   konga:
-    image: pantsel/konga:latest
+    image: mykong:v1.0.0 #pantsel/konga:latest
     container_name: konga
     ports:
       - 1337:1337
